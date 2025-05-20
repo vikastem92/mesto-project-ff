@@ -1,8 +1,9 @@
 import '../pages/index.css';
-import { initialCards, createCard, toggleLike } from './cards.js';
-import { openPopup, closePopup } from './modal.js';
+import { initialCards } from './cards.js';
+import { createCard, toggleLike, deleteCard } from './card.js';
+import { openPopup, closePopup, setModalWindowEventListeners } from './modal.js';
 
-// DOM: узлы
+// DOM: узлы и переменные
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
 
@@ -26,7 +27,37 @@ const formNewCard = document.querySelector('form[name="new-place"]');
 const cardNameInput = formNewCard.querySelector('.popup__input_type_card-name');
 const cardLinkInput = formNewCard.querySelector('.popup__input_type_url');
 
-// Обработчики открытия попапов
+// функции
+
+function handleEditProfileSubmit(evt) {
+  evt.preventDefault();
+  profileTitle.textContent = nameInput.value;
+  profileDescription.textContent = jobInput.value;
+  closePopup(popupEdit);
+}
+
+function handleNewCardSubmit(evt) {
+  evt.preventDefault();
+  const name = cardNameInput.value;
+  const link = cardLinkInput.value;
+  const newCard = createCard({ name, link }, toggleLike, handleImageClick, deleteCard);
+  placesList.prepend(newCard);
+  closePopup(popupNewCard);
+  formNewCard.reset();
+}
+
+function handleImageClick(data) {
+  popupImageElement.src = data.link;
+  popupImageElement.alt = data.name;
+  popupCaption.textContent = data.name;
+  openPopup(popupImage);
+}
+
+// Инициализация обработчиков попапов
+document.querySelectorAll('.popup').forEach(setModalWindowEventListeners);
+
+// Обработчики событий
+
 buttonOpenEdit.addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
@@ -37,52 +68,11 @@ buttonOpenNewCard.addEventListener('click', () => {
   openPopup(popupNewCard);
 });
 
-// Закрытие попапов: по крестику и оверлею
-const popups = document.querySelectorAll('.popup');
-popups.forEach((popup) => {
-  const closeButton = popup.querySelector('.popup__close');
-  if (closeButton) {
-    closeButton.addEventListener('click', () => closePopup(popup));
-  }
-
-  popup.addEventListener('mousedown', (evt) => {
-    if (evt.target === popup) {
-      closePopup(popup);
-    }
-  });
-});
-
-// Отправка формы редактирования профиля 
-function handleFormSubmit(evt) {
-  evt.preventDefault();
-  profileTitle.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
-  closePopup(popupEdit);
-}
-formEditProfile.addEventListener('submit', handleFormSubmit);
-
-// Отправка формы добавления новой карточки 
-function handleNewCardSubmit(evt) {
-  evt.preventDefault();
-  const name = cardNameInput.value;
-  const link = cardLinkInput.value;
-  const newCard = createCard({ name, link }, toggleLike, handleImageClick);
-  placesList.prepend(newCard);
-  closePopup(popupNewCard);
-  formNewCard.reset();
-}
+formEditProfile.addEventListener('submit', handleEditProfileSubmit);
 formNewCard.addEventListener('submit', handleNewCardSubmit);
 
-//  Обработчик открытия картинки в попапе
-function handleImageClick(data) {
-  popupImageElement.src = data.link;
-  popupImageElement.alt = data.name;
-  popupCaption.textContent = data.name;
-  openPopup(popupImage);
-}
-
-// Отображение начальных карточек 
+// Отображение начальных карточек
 initialCards.forEach((cardData) => {
-  const cardElement = createCard(cardData, toggleLike, handleImageClick);
+  const cardElement = createCard(cardData, toggleLike, handleImageClick, deleteCard);
   placesList.append(cardElement);
 });

@@ -17,4 +17,17 @@ function handleEscClose(evt) {
   }
 }
 
-export { openPopup, closePopup };
+function setModalWindowEventListeners(popup) {
+  const closeButton = popup.querySelector('.popup__close');
+  if (closeButton) {
+    closeButton.addEventListener('click', () => closePopup(popup));
+  }
+
+  popup.addEventListener('mousedown', (evt) => {
+    if (evt.target === popup) {
+      closePopup(popup);
+    }
+  })
+}
+
+export { openPopup, closePopup, setModalWindowEventListeners };
