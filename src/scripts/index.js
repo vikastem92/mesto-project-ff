@@ -43,7 +43,7 @@ const avatarInput = formAvatar.querySelector('.popup__input_type_avatar-url');
 
 let currentUserId = null;
 
-// ✅ временное хранилище карточки для удаления
+// временное хранилище карточки для удаления
 let cardToDelete = null;
 let cardIdToDelete = null;
 
