@@ -33,7 +33,7 @@
     </p>
   </footer>
   <div class="popup popup_type_edit">
-    <div class="popup__content">
+    <div class="popup__content popup__content_type_form">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
       <form class="popup__form" name="edit-profile">
@@ -58,6 +58,22 @@
       </form>
     </div>
   </div>
+  <div class="popup popup_type_avatar">
+    <div class="popup__content popup__content_type_avatar">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="edit-avatar" novalidate>
+        <input
+          type="url"
+          name="avatar"
+          class="popup__input popup__input_type_avatar-url"
+          placeholder="Ссылка на аватар"
+          required />
+        <span class="popup__error" id="avatar-error"></span>
+        <button class="popup__button" type="submit">Сохранить</button>
+      </form>
+    </div>
+  </div>
   <div class="popup popup_type_image">
     <div class="popup__content popup__content_content_image">
       <button type="button" class="popup__close"></button>
@@ -66,7 +82,7 @@
     </div>
   </div>
   <div class="popup popup_type_confirm">
-    <div class="popup__content">
+    <div class="popup__content popup__content_type_confirm">
       <button type="button" class="popup__close"></button>
       <form class="popup__form" name="confirm-delete">
         <h3 class="popup__title">Вы уверены?</h3>

@@ -89,3 +89,12 @@ export function unlikeCard(cardId) {
   })
     .then(res => res.ok ? res.json() : Promise.reject(`Ошибка дизлайка: ${res.status}`));
 }
+
+export function updateAvatar(avatarUrl) {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({ avatar: avatarUrl })
+  })
+    .then(res => res.ok ? res.json() : Promise.reject(`Ошибка обновления аватара: ${res.status}`));
+}
