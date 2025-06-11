@@ -4,7 +4,6 @@ import { createCard, deleteCard } from './card.js';
 import { openPopup, closePopup, setModalWindowEventListeners } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
 import { getUserInfo, getInitialCards, updateUserInfo, addCard, deleteCardFromServer } from './api.js';
-import { likeCard, unlikeCard } from './api.js';
 import { updateAvatar } from './api.js';
 
 
@@ -92,7 +91,7 @@ function handleEditProfileSubmit(evt) {
 
 function handleNewCardSubmit(evt) {
   evt.preventDefault();
-  const button = formNewCard.querySelector('.popup__button');
+  const button = evt.submitter;
   renderLoading(true, button);
 
   const name = cardNameInput.value;
@@ -100,7 +99,7 @@ function handleNewCardSubmit(evt) {
 
   addCard({ name, link })
     .then(cardData => {
-      const newCard = createCard(cardData, toggleLike, handleImageClick, handleDeleteCard, currentUserId);
+      const newCard = createCard(cardData, handleImageClick, handleDeleteCard, currentUserId);
       placesList.prepend(newCard);
       closePopup(popupNewCard);
       formNewCard.reset();
@@ -126,20 +125,6 @@ function handleDeleteCard(cardElement, cardId) {
   cardToDelete = cardElement;
   cardIdToDelete = cardId;
   openPopup(popupConfirm);
-}
-
-function toggleLike(button, cardId, likeCounter) {
-  const isLiked = button.classList.contains('card__like-button_is-active');
-  const request = isLiked ? unlikeCard(cardId) : likeCard(cardId);
-
-  request
-    .then(updatedCard => {
-      button.classList.toggle('card__like-button_is-active');
-      likeCounter.textContent = updatedCard.likes.length;
-    })
-    .catch(err => {
-      console.error('Ошибка при изменении лайка:', err);
-    });
 }
 
 
@@ -221,7 +206,7 @@ Promise.all([getUserInfo(), getInitialCards()])
 
     cards.reverse().forEach(cardData => {
       console.log(cardData);
-      const cardElement = createCard(cardData, toggleLike, handleImageClick, handleDeleteCard, currentUserId);
+      const cardElement = createCard(cardData, handleImageClick, handleDeleteCard, currentUserId);
       placesList.append(cardElement);
     });
   })
